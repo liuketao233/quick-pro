@@ -46,17 +46,17 @@ export default NextAuth({
       }
       return true;
     },
-    async session({ session, token, user }) {
-      session.userId = user.id;
-      session.provider = token?.provider || null; // 将登录提供商信息存入 session
+    async session({ session, token  }) {
+      session.userId = token.sub;  // sub 是 token 中的用户唯一 ID
+      session.provider = token.provider || null;
       return session;
     },
     async jwt({ token, account }) {
       if (account) {
-        token.provider = account.provider;  // 将提供商信息存入 JWT token
+        token.provider = account.provider;  // 记录登录提供商
       }
       return token;
-    },
+    }
   },
   secret: process.env.NEXTAUTH_SECRET,
 });
