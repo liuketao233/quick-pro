@@ -1,7 +1,6 @@
 // pages/api/auth/[...nextauth].js
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import clientPromise from '../../../lib/mongodb';
 import User from '../../../models/User';
 
@@ -12,25 +11,39 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  adapter: MongoDBAdapter(clientPromise),
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log(profile);
-      const existingUser = await User.findOne({ email: user.email });
+      console.log(profile,User)
+      const client = await clientPromise;
+      const db = client.db();
+      const usersCollection = db.collection('users');
+
+      // 检查用户是否已存在
+      const existingUser = await usersCollection.findOne({ email: user.email });
 
       if (!existingUser) {
-        await User.create({
+        // 如果用户不存在，则创建新用户
+        await usersCollection.insertOne({
           name: user.name,
           email: user.email,
           emailVerified: user.emailVerified || false,
           image: user.image,
           provider: account.provider,
           providerAccountId: account.providerAccountId,
-          lastLoginAt: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         });
       } else {
-        existingUser.lastLoginAt = new Date();
-        await existingUser.save();
+        // 如果用户已存在，更新 lastLoginAt 和 updatedAt
+        await usersCollection.updateOne(
+          { email: user.email },
+          {
+            $set: {
+              lastLoginAt: new Date(),
+              updatedAt: new Date(),
+            },
+          }
+        );
       }
       return true;
     },
