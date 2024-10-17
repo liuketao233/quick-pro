@@ -35,7 +35,7 @@ export default function Home() {
     return (
       <div>
 
-        < h2 > Welcome {session.user.email} 😀{session.user.id}😀{session.user.name}</h2 >
+        < h2 > Welcome {session.user.email} 😀{session.userId}😀{session.user.name}</h2 >
         <button onClick={() => signOut()}>Sign out</button>
       </div>
     )
