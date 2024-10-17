@@ -2,7 +2,6 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import clientPromise from '../../../lib/mongodb';
-import User from '../../../models/User';
 
 export default NextAuth({
   providers: [
@@ -13,10 +12,10 @@ export default NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log(profile,User)
+      console.log(profile)
       const client = await clientPromise;
       const db = client.db();
-      const usersCollection = db.collection('users');
+      const usersCollection = db.collection('user');
 
       // 检查用户是否已存在
       const existingUser = await usersCollection.findOne({ email: user.email });
