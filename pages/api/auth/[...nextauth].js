@@ -12,10 +12,10 @@ export default NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log(profile)
+      console.log(user, account, profile)
       const client = await clientPromise;
-      const db = client.db();
-      const usersCollection = db.collection('user');
+      const db = client.db('sample_mflix');
+      const usersCollection = db.collection('users');
 
       // 检查用户是否已存在
       const existingUser = await usersCollection.findOne({ email: user.email });
