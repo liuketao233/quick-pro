@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
   // 允许跨域访问，设置允许的域名
-  res.setHeader('Access-Control-Allow-Origin', 'https://freefiresimulator.framer.website'); 
+  res.setHeader('Access-Control-Allow-Origin', 'freefiresimulator.framer.website'); 
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
   res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Authorization, Content-Type');
