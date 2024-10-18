@@ -1,4 +1,4 @@
-// pages/api/auth/session.js
+// pages/api/session.js
 import { getSession } from 'next-auth';
 
 const handler = async (req, res) => {
