@@ -2,6 +2,7 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import clientPromise from '../../../lib/mongodb';
+import jwt from 'jsonwebtoken';
 
 export default async function handler(req, res) {
   // 允许跨域访问，设置允许的域名
@@ -22,6 +23,10 @@ export default async function handler(req, res) {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       }),
     ],
+    secret: process.env.NEXTAUTH_SECRET,
+    session: {
+      strategy: 'jwt',  // 使用 JWT 作为 session 管理
+    },
     callbacks: {
       async signIn({ user, account, profile }) {
         console.log(user, account, profile)
@@ -59,13 +64,17 @@ export default async function handler(req, res) {
         return true;
       },
       async session({ session, token  }) {
-        session.userId = token.sub;  // sub 是 token 中的用户唯一 ID
-        session.provider = token.provider || null;
+        session.accessToken = token.accessToken; // 将 JWT 传递到 session 中
         return session;
       },
-      async jwt({ token, user }) {
-        if (user) {
-          token.user = user;
+      async jwt({ token, account }) {
+        if (account) {
+          // 当用户首次登录时，生成 JWT
+          token.accessToken = jwt.sign(
+            { email: token.email, name: token.name },
+            process.env.JWT_SECRET,
+            { expiresIn: '30 days' }
+          );
         }
         return token;
       },
