@@ -2,7 +2,7 @@ import { getSession } from 'next-auth/react';
 
 export default async function handler(req, res) {
   // 设置 CORS 头，允许来自 Framer 的跨域请求
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', 'https://freefiresimulator.framer.website');
   res.setHeader('Access-Control-Allow-Credentials', 'true');  // 如果需要传递 cookies 或身份信息
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
