@@ -79,8 +79,8 @@ export default async function handler(req, res) {
         return token;
       },
       async redirect({ url, baseUrl }) {
-        console.log(url, baseUrl);
-        return 'https://freefiresimulator.framer.website/';  // 登录成功后重定向回到首页
+        console.log(url)
+        return baseUrl;
       },
     },
     secret: process.env.NEXTAUTH_SECRET,
