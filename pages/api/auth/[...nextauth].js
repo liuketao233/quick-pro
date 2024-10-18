@@ -51,12 +51,6 @@ export default NextAuth({
       session.provider = token.provider || null;
       return session;
     },
-    async jwt({ token, account }) {
-      if (account) {
-        token.provider = account.provider;  // 记录登录提供商
-      }
-      return token;
-    }
   },
   secret: process.env.NEXTAUTH_SECRET,
 });
