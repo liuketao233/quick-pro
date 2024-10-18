@@ -51,6 +51,12 @@ export default NextAuth({
       session.provider = token.provider || null;
       return session;
     },
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
 });
